@@ -4,7 +4,7 @@ const port = 5000
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const config = require('./config/key'); 
-
+const {auth} = require('./middleware/auth');
 const {User} = require("./models/User");
 
 //application/x-www-form-urlencoded
@@ -24,7 +24,7 @@ app.listen(port, () => {
 })
 app.get('/',(req,res) => res.send('Hello~ 2022'))
 
-app.post('/register',(req,res) => {
+app.post('/api/users/register',(req,res) => {
   //회원가입 할때 필요한 정보들을 client에서 가져오면
   //그것들을 데이터베이스에 넣어준다.
 
@@ -37,7 +37,7 @@ app.post('/register',(req,res) => {
       })//callback function 저장에 문제가 있으면 에러메세지 출력
   
     }) // 몽고DB에 유저 정보가 저장
-    app.post('/login',(req,res) => {
+    app.post('/api/users/login',(req,res) => {
       //요청된 이메일을 데이터베이스에서 있는지 찾는다
       User.findOne( {email : req.body.email},(err,user)=>{
         if(!user){
@@ -60,20 +60,45 @@ app.post('/register',(req,res) => {
                .status(200)
                .json({loginSuccess: true , userId: user._id})
 
-
-            
           })
-
-        
         })
-
-
       })
-      //비밀번호까지 같다면 유저를 위한 토큰(Token)을 생성
+    })
+    //auth 미들웨어: req를 받은 다음 데이터가 callbackFunc로 보내지기 전
+    // 미들웨어를 한번 더 걸쳐 가는 
+    /*
+      role : 0(일반유저) , 그외 관리자
+     */
+    app.get('/api/users/auth', auth ,(req,res) => {
+
+      //여기까지 미들웨어를 통과해 있다는 얘기는 
+      //Authentication 이 True 라는 말
+      res.status(200).json({
+        _id : req.user._id 
+        ,isAdmin : req.user.role === 0 ? false: true
+        ,isAuth : true
+        ,email : req.user.email
+        ,name : req.user.name
+        ,lastname : req.user.lastname
+        ,role : req.user.role
+        ,image : req.user.image
+      })
     })
 
+app.get('/api/users/logout',auth,(req,res) => {
+  User.findOneAndUpdate(
+    { _id: req.user._id }
+    ,{token : ""}
+    ,(err,user) => {
+        if(err)
+          return res.json({success : false , err});
 
+        return res.status(200).send({
+          success : true
+        });
 
+    })
+})
 
 
 
