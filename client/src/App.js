@@ -8,6 +8,7 @@ import { BrowserRouter as Router,
 import LandingPage from "./components/views/LandingPage/LandingPage";
 import LoginPage from "./components/views/LoginPage/LoginPage";
 import RegisterPage from "./components/views/RegisterPage/RegisterPage";
+import Footer from "./components/views/Footer/Footer";
 
 export default function App() {
   return (
@@ -17,13 +18,16 @@ export default function App() {
           <ul>
             
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/">메인화면</Link>
             </li>
             <li>
-              <Link to="/login">About</Link>
+              <Link to="/login">로그인</Link>
             </li>
             <li>
-              <Link to="/register">Users</Link>
+              <Link to="/register">등록하기</Link>
+            </li>
+            <li>
+              <Link to="/footer">푸터</Link>
             </li>
             
           </ul>
@@ -33,6 +37,7 @@ export default function App() {
           <Route exact path="/" element={<LandingPage />}></Route>
           <Route exact path="/login" element={<LoginPage />}></Route>
           <Route exact path="/register" element={<RegisterPage />}></Route>
+          <Route exact path="/footer" element={<Footer />}></Route>
         </Routes>
 
       </div>
