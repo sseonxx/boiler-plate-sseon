@@ -1,11 +1,15 @@
+import { Axios } from 'axios';
 import React,{ useState } from 'react';
+import {useDispatch} from 'react-redux'
+import {loginUser} from '../../../_actions/user_actions'
 
 function LoginPage() {
+  const dispatch = useDispatch();
 
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
 
-  const onEmailHandler = (event) => {
+  const onEmailHandler = (event) =>{
     setEmail(event.currentTarget.value)
   }
   const onPasswordHandler = (event) =>{
@@ -13,8 +17,17 @@ function LoginPage() {
   }
   const onSubmitHandler = (event) =>{
     event.preventDefault(); //페이지리프레쉬 막기
-    console.log('Email',Email);
-    console.log('Password',Password);
+
+    // console.log('Email',Email);
+    // console.log('Password',Password);
+
+    let body = {
+        email: Email,
+        password: Password
+    }
+    //loginUser 액션
+    dispatch(loginUser(body))
+
 
     
   }
