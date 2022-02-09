@@ -5,6 +5,7 @@ import {
 export default function (state = {},action){
     switch (action.type) {
         case LOGIN_USER:
+                //spread operator : ...state 
                 return {...state, loginSuccess: action.payload}
             break;
     
