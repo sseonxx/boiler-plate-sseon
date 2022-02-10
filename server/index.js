@@ -13,6 +13,8 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+
+
 const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI).then(() => console.log('MongoDB connected!'))
   .catch(err => console.log(err))
@@ -65,11 +67,11 @@ app.post('/api/users/login',(req,res) => {
     })
   })
 })
-//auth 미들웨어: req를 받은 다음 데이터가 callbackFunc로 보내지기 전
-// 미들웨어를 한번 더 걸쳐 가는 
-/*
-  role : 0(일반유저) , 그외 관리자
-  */
+  //auth 미들웨어: req를 받은 다음 데이터가 callbackFunc로 보내지기 전
+  // 미들웨어를 한번 더 걸쳐 가는 
+  /*
+    role : 0(일반유저) , 그외 관리자
+    */
 app.get('/api/users/auth', auth ,(req,res) => {
 
   //여기까지 미들웨어를 통과해 있다는 얘기는 
